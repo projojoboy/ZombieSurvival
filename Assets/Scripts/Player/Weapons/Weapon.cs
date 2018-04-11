@@ -9,6 +9,7 @@ public class Weapon : MonoBehaviour {
     [SerializeField] LayerMask whatToHit;
 
     [SerializeField] Transform bulletTrailPref;
+    [SerializeField] Transform muzzleFlashPref;
 
     float timeToSpawnEffect = 0;
     float effectSpawnRate = 10;
@@ -17,7 +18,7 @@ public class Weapon : MonoBehaviour {
     Transform shootPoint;
 	// Use this for initialization
 	void Awake () {
-        shootPoint = transform.FindChild("ShootPoint");
+        shootPoint = transform.Find("ShootPoint");
         if(shootPoint == null)
         {
             Debug.LogError("No Shootpoint? WHAT?!");
@@ -66,5 +67,11 @@ public class Weapon : MonoBehaviour {
     void Effect()
     {
         Instantiate(bulletTrailPref, shootPoint.position, shootPoint.rotation);
-    }
+        Transform clone = Instantiate(muzzleFlashPref, shootPoint.position, shootPoint.rotation) as Transform;
+        clone.parent = shootPoint;
+        float size = Random.Range(0.2f, 0.5f);
+        clone.localScale = new Vector3(size, size, size);
+        Destroy(clone.gameObject, 0.02f);
+    }   
+
 }
